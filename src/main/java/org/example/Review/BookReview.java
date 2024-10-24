@@ -3,13 +3,12 @@ package org.example.Review;
 import lombok.*;
 
 import java.net.URL;
-import java.util.Arrays;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review
+public class BookReview
 {
     String bookTitle, bookAuthors, revAuthor, revText;
     int rating;
@@ -24,6 +23,4 @@ public class Review
                 "Оценка: " + rating + "\n" +
                 revText;
     }
-
-
 }
