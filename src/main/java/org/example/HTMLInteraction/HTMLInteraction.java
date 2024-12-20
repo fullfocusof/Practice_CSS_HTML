@@ -1,5 +1,6 @@
-package org.example.HTMLInterraction;
+package org.example.HTMLInteraction;
 
+import lombok.Getter;
 import org.example.OnlineStore.OnlineStore;
 import org.example.Review.BookReview;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class HTMLInteraction
 {
     private static HTMLInteraction instance;
+    @Getter
     String mainURL, curURL;
     Document web;
 
@@ -45,12 +47,14 @@ public class HTMLInteraction
 
     private static void downloadImage(URL imgURL, String filename)
     {
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[2048];
         int n = -1;
+        String URLStr = imgURL.toString();
+        String extension = URLStr.substring(URLStr.lastIndexOf("."));
 
         try (InputStream in = imgURL.openStream())
         {
-            OutputStream os = new FileOutputStream( "src\\main\\resources\\images" + "\\" + filename + ".jpg");
+            OutputStream os = new FileOutputStream( "src\\main\\resources\\images" + "\\" + filename + extension);
             while ((n = in.read(buffer)) != -1 )
             {
                 os.write(buffer, 0, n);
@@ -62,13 +66,12 @@ public class HTMLInteraction
             System.out.println(e.getMessage());
         }
     }
-
-    public List<BookReview> getReviewsBooks()
+    public List<BookReview> getReviewsBooks(int pagesMax)
     {
         List<BookReview> revs = new ArrayList<>();
 
         int pages = 0;
-        while(pages < 5)
+        while(pages < pagesMax)
         {
             try
             {
@@ -81,15 +84,25 @@ public class HTMLInteraction
                 {
                     BookReview temp = new BookReview();
                     temp.setBookTitle(review.select("a[href^=\"/book.\"]").text()); // .select(".universal-blocks-description")
-                    temp.setBookAuthors(review.select("a[href^=\"/bookauthor.\"]").text()); // .select(".universal-blocks-description")
+
+                    Elements bookAuthorsParse = review.select("a[href^=\"/bookauthor.\"]");// .select(".universal-blocks-description")
+                    List<String> bookAuthors = new ArrayList<>();
+                    for (Element el : bookAuthorsParse)
+                    {
+                        bookAuthors.add(el.text());
+                    }
+                    temp.setBookAuthors(bookAuthors);
                     temp.setRevAuthor(review.select(".link").text());
 
                     try
                     {
-                        URL picURL = new URL(review.select("img").attr("src"));
+                        String picUrlStr = review.select("img").attr("src");
+                        URL picURL;
+                        if (picUrlStr.equals("/images/bookmix_cover.png")) picURL = new URL(mainURL + picUrlStr);
+                        else picURL = new URL(picUrlStr);
                         temp.setCoverURL(picURL);
 
-                        downloadImage(picURL, temp.getBookTitle());
+                        //downloadImage(picURL, temp.getBookTitle());
                     }
                     catch (MalformedURLException e)
                     {
@@ -125,7 +138,7 @@ public class HTMLInteraction
                 System.out.println(e.getMessage());
             }
 
-            String nextPage = web.body().select("li.arrow a:has(i[class='fas fa-angle-right'])").attr("href");;
+            String nextPage = web.body().select("li.arrow a:has(i[class='fas fa-angle-right'])").attr("href");
             curURL = mainURL + nextPage;
             pages++;
         }
@@ -192,8 +205,34 @@ public class HTMLInteraction
                 }
             }
 
-            String nextPage = web.body().select("a.next").attr("href");;
+            String nextPage = web.body().select("a.next").attr("href");
             curURL = mainURL + nextPage;
+            pages++;
+        }
+
+        return result;
+    }
+
+    public List<String> getPagesURL(int cnt)
+    {
+        List<String> result = new ArrayList<>();
+        result.add(curURL);
+
+        int pages = 0;
+        while(pages < cnt - 1)
+        {
+            try
+            {
+                web = Jsoup.connect(curURL).get();
+            }
+            catch (IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
+
+            String nextPage = web.body().select("li.arrow a:has(i[class='fas fa-angle-right'])").attr("href");
+            curURL = mainURL + nextPage;
+            result.add(curURL);
             pages++;
         }
 

@@ -11,7 +11,7 @@ public class OSReview
     String revAuthor, pros, cons, revText;
     int rating;
     
-    @Override
+    @Override   
     public String toString()
     {
         return "\t" + revAuthor + "\n" +
