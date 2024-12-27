@@ -11,43 +11,14 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
-public class SyncThreadOS implements Runnable
+public class SyncThreadOS
 {
     String mainURL;
 
     public SyncThreadOS(String mainURLInput)
     {
         mainURL = mainURLInput;
-    }
-
-    @Override
-    public void run()
-    {
-//        System.out.println("Запуск потока номер " + (ID + 1));
-//        List<OnlineStore> threadStores = new ArrayList<>();
-//        synchronized (storesParse)
-//        {
-//            try
-//            {
-//                while (true)
-//                {
-//                    Element store = queue.take();
-//                    threadStores = getMin50ReviewsStores(store);
-//                }
-//            }
-//            catch (InterruptedException e)
-//            {
-//                Thread.currentThread().interrupt();
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//        synchronized (onlineStores)
-//        {
-//            onlineStores.addAll(threadStores);
-//            //toGsonFile(onlineStores, "gsonOutputOS.json");
-//        }
     }
 
     public List<OnlineStore> getMin50ReviewsStores(Element store)
@@ -78,7 +49,6 @@ public class SyncThreadOS implements Runnable
                         temp.setRevText(review.select("td[itemprop=\"reviewBody\"]").text());
 
                         OSrevs.add(temp);
-                        if (OSrevs.size() == 3) break; // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
                     }
                 }
             }

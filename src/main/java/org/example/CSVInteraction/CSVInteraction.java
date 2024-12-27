@@ -3,8 +3,8 @@ package org.example.CSVInteraction;
 import com.opencsv.CSVWriter;
 import org.example.OnlineStore.OnlineStore;
 import org.example.Review.BookReview;
+import org.example.Review.OSReview;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -108,34 +108,19 @@ public class CSVInteraction
 
     public void printOnlyProsOSRevs(List<OnlineStore> data)
     {
-        for (OnlineStore os : data)
+        data.forEach(os ->
         {
-            List<HashMap<String, Object>> output = os.getRevs().stream()
+            List<OSReview> output = os.getRevs().stream()
                     .filter(OSR -> Objects.equals(OSR.getCons(), "—") || Objects.equals(OSR.getCons(), "нет") || Objects.equals(OSR.getCons(), "Нет"))
-                    .map(OSR ->
-                    {
-                        HashMap<String, Object> dataMap = new HashMap<>();
-                        dataMap.put("OSName", os.getStoreName());
-                        dataMap.put("OSR", OSR.getRevText());
-                        dataMap.put("OSRPros", OSR.getPros());
-                        dataMap.put("OSRRate", OSR.getRating());
-                        return dataMap;
-                    })
                     .collect(Collectors.toList());
 
-            for (HashMap<String, Object> dm : output)
-            {
-                System.out.println("Название магазина: " + dm.get("OSName").toString());
-                System.out.println("Оценка: " + dm.get("OSRRate").toString());
-                System.out.println("Плюсы: " + dm.get("OSRPros").toString());
-                System.out.println("Отзыв: " + dm.get("OSR").toString() + "\n");
-            }
-        }
+            output.forEach(OSR ->  System.out.println(os.getStoreName() + "\n" + OSR.toString() + "\n"));
+        });
     }
 
     public void printOnlyLessThanTwoStarsOSRevs(List<OnlineStore> data)
     {
-        for (OnlineStore os : data)
+        data.forEach(os ->
         {
             long cntOfRevs = os.getRevs().stream()
                     .filter(OSR -> OSR.getRating() <= 2)
@@ -143,12 +128,12 @@ public class CSVInteraction
 
             System.out.println("Название магазина: " + os.getStoreName());
             System.out.println("Количество отзывов с менее чем 2-мя звездами: " + cntOfRevs + "\n");
-        }
+        });
     }
 
     public void printThreeGroupsOSRevs(List<OnlineStore> data)
     {
-        for (OnlineStore os : data)
+        data.forEach(os ->
         {
             long positiveCntRevs = os.getRevs().stream()
                     .filter(OSR -> OSR.getRating() > 3)
@@ -164,6 +149,6 @@ public class CSVInteraction
             System.out.println("Количество положительных отзывов: " + positiveCntRevs);
             System.out.println("Количество нейтральных отзывов: " + neutralCntRevs);
             System.out.println("Количество отрицательных отзывов: " + negativeCntRevs + "\n");
-        }
+        });
     }
 }

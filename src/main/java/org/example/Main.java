@@ -52,7 +52,7 @@ public class Main
                             String.format("%-50s %s%n", "nanegative", "Составить список магазинов с более чем 50-ю отзывами на https://nanegative.ru/internet-magaziny") +
                             String.format("%-50s %s%n", "nanegativeSync", "Составить список магазинов с более чем 50-ю отзывами на https://nanegative.ru/internet-magaziny в режиме многопоточности") +
                             String.format("%-50s %s%n", "bookmixCSV", "Сохранить в CSV формат отзывы с https://bookmix.ru/comments/") +
-                            String.format("%-50s %s%n", "nanegativeCSV", "Сохранить в CSV формат отзывы с https://nanegative.ru/internet-magaziny") +
+                            String.format("%-50s %s%n", "nanegativeWconditions", "Сохранить в CSV формат отзывы с https://nanegative.ru/internet-magaziny") +
                             String.format("%-50s %s%n", "exit", "Выйти из программы");
                     System.out.println(sb);
                 }
@@ -76,6 +76,7 @@ public class Main
                     Duration duration = Duration.between(start, end);
 
                     System.out.println("Время выполнения программы: " + (duration.toMillis()) + " мс");
+                    System.out.println("Количество отзывов: " + revs.size());
                 }
                 break;
 
@@ -92,10 +93,13 @@ public class Main
 
                     System.out.println("Время выполнения программы: " + (duration.toMillis()) + " мс");
 
+                    int cntRevs = 0;
                     for (OnlineStore OS : stores)
                     {
-                        System.out.println(OS.toString() + "\n\n");
+                        //System.out.println(OS.toString() + "\n\n");
+                        cntRevs += OS.getRevs().size();
                     }
+                    System.out.println("Количество отзывов: " + cntRevs);
                 }
                 break;
 
@@ -140,6 +144,7 @@ public class Main
                     Duration duration = Duration.between(start, end);
 
                     System.out.println("Время выполнения программы: " + (duration.toMillis()) + " мс");
+                    System.out.println("Количество отзывов: " + revsSync.size());
                 }
                 break;
 
@@ -211,10 +216,13 @@ public class Main
 
                     System.out.println("Время выполнения программы: " + (duration.toMillis()) + " мс");
 
+                    int cntRevs = 0;
                     for (OnlineStore OS : storesSync)
                     {
-                        System.out.println(OS.toString() + "\n\n");
+                        //System.out.println(OS.toString() + "\n\n");
+                        cntRevs += OS.getRevs().size();
                     }
+                    System.out.println("Количество отзывов: " + cntRevs);
                 }
                 break;
 

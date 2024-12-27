@@ -37,7 +37,7 @@ public class SyncThreadBR implements Runnable
         synchronized (revs)
         {
             revs.addAll(pageRevs);
-            //toGsonFile(revs, "gsonOutputBR.json");
+            toGsonFile(revs, "gsonOutputBR.json");
         }
     }
 
@@ -49,21 +49,20 @@ public class SyncThreadBR implements Runnable
         {
             web = Jsoup.connect(curURL).get();
             Elements revsParse = web.body().select("div[class=\"col-12\"]>div[class=\"universal-blocks\"]");
-            //Elements revsParse = web.select(".comment");
             if (revsParse.isEmpty()) return revs;
 
             for (Element review : revsParse)
             {
                 BookReview temp = new BookReview();
-                temp.setBookTitle(review.select("a[href^=\"/book.\"]").text()); // .select(".universal-blocks-description")
+                temp.setBookTitle(review.select("a[href^=\"/book.\"]").text());
 
-                Elements bookAuthorsParse = review.select("a[href^=\"/bookauthor.\"]");// .select(".universal-blocks-description")
+                Elements bookAuthorsParse = review.select("a[href^=\"/bookauthor.\"]");
                 List<String> bookAuthors = new ArrayList<>();
                 for (Element el : bookAuthorsParse)
                 {
                     bookAuthors.add(el.text());
                 }
-                temp.setBookAuthors(bookAuthors); // .select(".universal-blocks-description")
+                temp.setBookAuthors(bookAuthors);
                 temp.setRevAuthor(review.select(".link").text());
 
                 try
@@ -71,7 +70,7 @@ public class SyncThreadBR implements Runnable
                     URL picURL = new URL(review.select("img").attr("src"));
                     temp.setCoverURL(picURL);
 
-                    //downloadImage(picURL, temp.getBookTitle());
+                    downloadImage(picURL, temp.getBookTitle());
                 }
                 catch (MalformedURLException e)
                 {

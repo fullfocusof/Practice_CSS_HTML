@@ -66,6 +66,7 @@ public class HTMLInteraction
             System.out.println(e.getMessage());
         }
     }
+
     public List<BookReview> getReviewsBooks(int pagesMax)
     {
         List<BookReview> revs = new ArrayList<>();
@@ -77,15 +78,14 @@ public class HTMLInteraction
             {
                 web = Jsoup.connect(curURL).get();
                 Elements revsParse = web.body().select("div[class=\"col-12\"]>div[class=\"universal-blocks\"]");
-                //Elements revsParse = web.select(".comment");
                 if (revsParse.isEmpty()) break;
 
                 for (Element review : revsParse)
                 {
                     BookReview temp = new BookReview();
-                    temp.setBookTitle(review.select("a[href^=\"/book.\"]").text()); // .select(".universal-blocks-description")
+                    temp.setBookTitle(review.select("a[href^=\"/book.\"]").text());
 
-                    Elements bookAuthorsParse = review.select("a[href^=\"/bookauthor.\"]");// .select(".universal-blocks-description")
+                    Elements bookAuthorsParse = review.select("a[href^=\"/bookauthor.\"]");
                     List<String> bookAuthors = new ArrayList<>();
                     for (Element el : bookAuthorsParse)
                     {
@@ -102,7 +102,7 @@ public class HTMLInteraction
                         else picURL = new URL(picUrlStr);
                         temp.setCoverURL(picURL);
 
-                        //downloadImage(picURL, temp.getBookTitle());
+                        downloadImage(picURL, temp.getBookTitle());
                     }
                     catch (MalformedURLException e)
                     {
@@ -191,7 +191,6 @@ public class HTMLInteraction
                             temp.setRevText(review.select("td[itemprop=\"reviewBody\"]").text());
 
                             OSrevs.add(temp);
-                            if (OSrevs.size() == 3) break; // LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
                         }
 
                     }
